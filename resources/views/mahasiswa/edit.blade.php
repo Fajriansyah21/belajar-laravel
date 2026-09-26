@@ -4,12 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ubah Data Mahasiswa</title>
+    <style>
+        @include('partials.style')
+        body {
+            max-width: 600px;
+        }
+    </style>
 </head>
 <body>
     <h1>Ubah Data Mahasiswa</h1>
 
     @if ($errors->any())
-        <ul>
+        <ul class="errors">
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
             @endforeach
@@ -80,8 +86,24 @@
             >
         </p>
 
+        <p>
+            <label for="kelas_id">Kelas</label><br>
+            <select id="kelas_id" name="kelas_id">
+                <option value="">-- Pilih Kelas --</option>
+
+                @foreach ($kelas as $k)
+                    <option
+                        value="{{ $k->id }}"
+                        {{ old('kelas_id', $mahasiswa->kelas_id) == $k->id ? 'selected' : '' }}
+                    >
+                        {{ $k->nama_kelas }}
+                    </option>
+                @endforeach
+            </select>
+        </p>
+
         <button type="submit">Simpan Perubahan</button>
-        <a href="{{ route('mahasiswa.index') }}">Batal</a>
+        <a href="{{ route('mahasiswa.index') }}" class="btn">Batal</a>
     </form>
 </body>
 </html>

@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\MataKuliah;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -26,10 +25,15 @@ class MataKuliahController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'kode_mk' => ['required', 'string', 'max:20', 'unique:mata_kuliah,kode_mk'],
-            'nama_mk' => ['required', 'string', 'max:100'],
-            'sks' => ['required', 'integer', 'min:1', 'max:6'],
-            'semester' => ['required', 'integer', 'min:1', 'max:8'],
+            'kode' => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('mata_kuliah', 'kode'),
+            ],
+            'nama_mata_kuliah' => ['required', 'string', 'max:100'],
+            'sks' => ['required', 'integer', 'min:1', 'max:10'],
+            'semester' => ['required', 'integer', 'min:1', 'max:14'],
         ]);
 
         MataKuliah::create($validated);
@@ -39,38 +43,38 @@ class MataKuliahController extends Controller
             ->with('success', 'Data mata kuliah berhasil ditambahkan.');
     }
 
-    public function edit(MataKuliah $mataKuliah): View
+    public function edit(MataKuliah $mata_kuliah): View
     {
-        return view('mata_kuliah.edit', compact('mataKuliah'));
+        return view('mata_kuliah.edit', compact('mata_kuliah'));
     }
 
     public function update(
         Request $request,
-        MataKuliah $mataKuliah
+        MataKuliah $mata_kuliah
     ): RedirectResponse {
         $validated = $request->validate([
-            'kode_mk' => [
+            'kode' => [
                 'required',
                 'string',
                 'max:20',
-                Rule::unique('mata_kuliah', 'kode_mk')
-                    ->ignore($mataKuliah->id),
+                Rule::unique('mata_kuliah', 'kode')
+                    ->ignore($mata_kuliah->id),
             ],
-            'nama_mk' => ['required', 'string', 'max:100'],
-            'sks' => ['required', 'integer', 'min:1', 'max:6'],
-            'semester' => ['required', 'integer', 'min:1', 'max:8'],
+            'nama_mata_kuliah' => ['required', 'string', 'max:100'],
+            'sks' => ['required', 'integer', 'min:1', 'max:10'],
+            'semester' => ['required', 'integer', 'min:1', 'max:14'],
         ]);
 
-        $mataKuliah->update($validated);
+        $mata_kuliah->update($validated);
 
         return redirect()
             ->route('mata-kuliah.index')
             ->with('success', 'Data mata kuliah berhasil diubah.');
     }
 
-    public function destroy(MataKuliah $mataKuliah): RedirectResponse
+    public function destroy(MataKuliah $mata_kuliah): RedirectResponse
     {
-        $mataKuliah->delete();
+        $mata_kuliah->delete();
 
         return redirect()
             ->route('mata-kuliah.index')

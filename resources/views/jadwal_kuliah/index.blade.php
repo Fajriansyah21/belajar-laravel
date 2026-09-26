@@ -3,77 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Mahasiswa</title>
+    <title>Jadwal Kuliah</title>
     <style>
         @include('partials.style')
+        body {
+            max-width: 1200px;
+        }
     </style>
 </head>
 <body>
-    <h1>Data Mahasiswa</h1>
+    <h1>Jadwal Kuliah</h1>
 
     @if (session('success'))
         <p class="success">{{ session('success') }}</p>
     @endif
 
     <p>
-        <a href="{{ route('mahasiswa.create') }}">Tambah Mahasiswa</a>
+        <a href="{{ route('jadwal-kuliah.create') }}">Tambah Jadwal</a>
         |
         <a href="{{ route('dosen.index') }}">Data Dosen</a>
+        |
+        <a href="{{ route('mahasiswa.index') }}">Data Mahasiswa</a>
         |
         <a href="{{ route('mata-kuliah.index') }}">Mata Kuliah</a>
         |
         <a href="{{ route('ruangan.index') }}">Ruangan</a>
         |
         <a href="{{ route('kelas.index') }}">Kelas</a>
-        |
-        <a href="{{ route('jadwal-kuliah.index') }}">Jadwal Kuliah</a>
     </p>
 
     <table>
         <thead>
             <tr>
                 <th>No</th>
-                <th>NIM</th>
-                <th>Nama</th>
-                <th>Jurusan</th>
-                <th>Angkatan</th>
-                <th>Email</th>
                 <th>Kelas</th>
+                <th>Mata Kuliah</th>
+                <th>Dosen</th>
+                <th>Ruangan</th>
+                <th>Hari</th>
+                <th>Jam</th>
                 <th>Action</th>
             </tr>
         </thead>
-
         <tbody>
-            @forelse ($mahasiswa as $mhs)
+            @forelse ($jadwalKuliah as $jk)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $mhs->nim }}</td>
-                    <td>{{ $mhs->nama }}</td>
-                    <td>{{ $mhs->jurusan }}</td>
-                    <td>{{ $mhs->angkatan }}</td>
-                    <td>{{ $mhs->email }}</td>
-                    <td>{{ $mhs->kelas->nama_kelas ?? '-' }}</td>
+                    <td>{{ $jk->kelas->nama_kelas }}</td>
+                    <td>{{ $jk->mataKuliah->nama_mata_kuliah }}</td>
+                    <td>{{ $jk->dosen->nama }}</td>
+                    <td>{{ $jk->ruangan->nama }} ({{ $jk->ruangan->kode_ruangan }})</td>
+                    <td>{{ $jk->hari }}</td>
+                    <td>{{ substr($jk->jam_mulai, 0, 5) }} - {{ substr($jk->jam_selesai, 0, 5) }}</td>
                     <td>
-                        <a href="{{ route('mahasiswa.edit', $mhs->id) }}" class="btn">
-                            Ubah
-                        </a>
+                        <a href="{{ route('jadwal-kuliah.edit', $jk->id) }}" class="btn">Ubah</a>
 
                         <form
-                            action="{{ route('mahasiswa.destroy', $mhs->id) }}"
+                            action="{{ route('jadwal-kuliah.destroy', $jk->id) }}"
                             method="POST"
                             style="display: inline"
-                            onsubmit="return confirm('Yakin ingin menghapus data mahasiswa ini?')"
+                            onsubmit="return confirm('Yakin ingin menghapus jadwal ini?')"
                         >
                             @csrf
                             @method('DELETE')
-
                             <button type="submit">Hapus</button>
                         </form>
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="8">Belum ada data mahasiswa.</td>
+                    <td colspan="8">Belum ada jadwal kuliah.</td>
                 </tr>
             @endforelse
         </tbody>
