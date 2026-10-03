@@ -1,34 +1,41 @@
-
 @if ($paginator->hasPages())
-    <nav>
+    <nav aria-label="Navigasi halaman">
         <div style="margin-bottom: 10px;">
             Menampilkan {{ $paginator->firstItem() }}–{{ $paginator->lastItem() }}
-            dari {{ $paginator->total() }} data mahasiswa
+            dari {{ $paginator->total() }} data
         </div>
 
-        <div style="display: flex; gap: 5px; align-items: center;">
-            {{-- Tombol Previous --}}
+        <div style="display: flex; gap: 5px; align-items: center; flex-wrap: wrap;">
+            {{-- Previous --}}
             @if ($paginator->onFirstPage())
-                <span style="padding: 6px 10px; color: #999;">Previous</span>
+                <span style="padding: 6px 10px; color: #999;">
+                    Previous
+                </span>
             @else
                 <a href="{{ $paginator->previousPageUrl() }}"
-                   style="padding: 6px 10px;">Previous</a>
+                   style="padding: 6px 10px;">
+                    Previous
+                </a>
             @endif
 
             {{-- Nomor halaman --}}
             @foreach ($elements as $element)
                 @if (is_string($element))
-                    <span style="padding: 6px 10px;">{{ $element }}</span>
+                    <span style="padding: 6px 10px;">
+                        {{ $element }}
+                    </span>
                 @endif
 
                 @if (is_array($element))
                     @foreach ($element as $page => $url)
                         @if ($page == $paginator->currentPage())
-                            <span style="padding: 6px 10px; background: #2563eb; color: white;">
+                            <span aria-current="page"
+                                  style="padding: 6px 10px; background: #2563eb; color: white;">
                                 {{ $page }}
                             </span>
                         @else
-                            <a href="{{ $url }}" style="padding: 6px 10px;">
+                            <a href="{{ $url }}"
+                               style="padding: 6px 10px;">
                                 {{ $page }}
                             </a>
                         @endif
@@ -36,12 +43,16 @@
                 @endif
             @endforeach
 
-            {{-- Tombol Next --}}
+            {{-- Next --}}
             @if ($paginator->hasMorePages())
                 <a href="{{ $paginator->nextPageUrl() }}"
-                   style="padding: 6px 10px;">Next</a>
+                   style="padding: 6px 10px;">
+                    Next
+                </a>
             @else
-                <span style="padding: 6px 10px; color: #999;">Next</span>
+                <span style="padding: 6px 10px; color: #999;">
+                    Next
+                </span>
             @endif
         </div>
     </nav>

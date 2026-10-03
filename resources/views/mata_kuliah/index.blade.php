@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
         @include('partials.style')
     </style>
 </head>
+
 <body>
     <h1>Data Mata Kuliah</h1>
 
@@ -16,7 +18,11 @@
     @endif
 
     <p>
-        <a href="{{ route('mata-kuliah.create') }}">Tambah Mata Kuliah</a>
+        @role('admin')
+        <a href="{{ route('mata-kuliah.create') }}">
+            Tambah Mata Kuliah
+        </a>
+        @endrole
         |
         <a href="{{ route('dosen.index') }}">Data Dosen</a>
         |
@@ -50,21 +56,25 @@
                     <td>{{ $mk->sks }}</td>
                     <td>{{ $mk->semester }}</td>
                     <td>
-                        <a href="{{ route('mata-kuliah.edit', $mk->id) }}" class="btn">
-                            Ubah
-                        </a>
+                        @role('admin')
+                            <a href="{{ route('mata-kuliah.edit', $mk->id) }}" class="btn">
+                                Ubah
+                            </a>
 
-                        <form
-                            action="{{ route('mata-kuliah.destroy', $mk->id) }}"
-                            method="POST"
-                            style="display: inline"
-                            onsubmit="return confirm('Yakin ingin menghapus data mata kuliah ini?')"
-                        >
-                            @csrf
-                            @method('DELETE')
+                            <form
+                                action="{{ route('mata-kuliah.destroy', $mk->id) }}"
+                                method="POST"
+                                style="display: inline"
+                                onsubmit="return confirm('Yakin ingin menghapus data mata kuliah ini?')"
+                            >
+                                @csrf
+                                @method('DELETE')
 
-                            <button type="submit">Hapus</button>
-                        </form>
+                                <button type="submit">Hapus</button>
+                            </form>
+                        @else
+                            -
+                        @endrole
                     </td>
                 </tr>
             @empty
@@ -75,4 +85,5 @@
         </tbody>
     </table>
 </body>
+
 </html>

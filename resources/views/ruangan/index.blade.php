@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
         @include('partials.style')
     </style>
 </head>
+
 <body>
     <h1>Data Ruangan</h1>
 
@@ -16,7 +18,9 @@
     @endif
 
     <p>
-        <a href="{{ route('ruangan.create') }}">Tambah Ruangan</a>
+        @role('admin')
+            <a href="{{ route('ruangan.create') }}">Tambah Ruangan</a>
+        @endrole
         |
         <a href="{{ route('dosen.index') }}">Data Dosen</a>
         |
@@ -52,21 +56,25 @@
                     <td>{{ $r->kapasitas }}</td>
                     <td>{{ $r->is_lab ? 'Ya' : 'Tidak' }}</td>
                     <td>
-                        <a href="{{ route('ruangan.edit', $r->id) }}" class="btn">
-                            Ubah
-                        </a>
+                        @role('admin')
+                            <a href="{{ route('ruangan.edit', $r->id) }}" class="btn">
+                                Ubah
+                            </a>
 
-                        <form
-                            action="{{ route('ruangan.destroy', $r->id) }}"
-                            method="POST"
-                            style="display: inline"
-                            onsubmit="return confirm('Yakin ingin menghapus data ruangan ini?')"
-                        >
-                            @csrf
-                            @method('DELETE')
+                            <form
+                                action="{{ route('ruangan.destroy', $r->id) }}"
+                                method="POST"
+                                style="display: inline"
+                                onsubmit="return confirm('Yakin ingin menghapus data ruangan ini?')"
+                            >
+                                @csrf
+                                @method('DELETE')
 
-                            <button type="submit">Hapus</button>
-                        </form>
+                                <button type="submit">Hapus</button>
+                            </form>
+                        @else
+                            -
+                        @endrole
                     </td>
                 </tr>
             @empty
@@ -77,4 +85,5 @@
         </tbody>
     </table>
 </body>
+
 </html>

@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -9,7 +10,7 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MataKuliahController;
 use App\Http\Controllers\RuanganController;
 
-// Route login (hanya tamu)
+// Login hanya untuk pengguna yang belum login.
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])
         ->name('login');
@@ -18,41 +19,38 @@ Route::middleware('guest')->group(function () {
         ->name('login.store');
 });
 
-// Route logout
+// Logout hanya untuk pengguna yang sudah login.
 Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
 
-// Halaman utama
+// Halaman utama.
 Route::get('/', function () {
     return redirect()->route('mahasiswa.index');
 });
 
-// Semua user yang sudah login: hanya bisa melihat data
+// Semua pengguna yang login boleh melihat daftar data.
 Route::middleware('auth')->group(function () {
     Route::resource('mahasiswa', MahasiswaController::class)
-        ->only(['index', 'show']);
+        ->only(['index']);
 
     Route::resource('dosen', DosenController::class)
-        ->only(['index', 'show']);
+        ->only(['index']);
 
     Route::resource('mata-kuliah', MataKuliahController::class)
-        ->only(['index', 'show']);
+        ->only(['index']);
 
     Route::resource('ruangan', RuanganController::class)
-        ->only(['index', 'show']);
+        ->only(['index']);
 
     Route::resource('kelas', KelasController::class)
-        ->only(['index', 'show'])
-        ->parameters([
-            'kelas' => 'kls',
-        ]);
+        ->only(['index']);
 
     Route::resource('jadwal-kuliah', JadwalKuliahController::class)
-        ->only(['index', 'show']);
+        ->only(['index']);
 });
 
-// Khusus admin: tambah, simpan, edit, perbarui, dan hapus data
+// Hanya admin yang boleh melakukan CRUD.
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('mahasiswa', MahasiswaController::class)
         ->except(['index', 'show']);

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
         }
     </style>
 </head>
+
 <body>
     <h1>Jadwal Kuliah</h1>
 
@@ -19,7 +21,9 @@
     @endif
 
     <p>
-        <a href="{{ route('jadwal-kuliah.create') }}">Tambah Jadwal</a>
+        @role('admin')
+            <a href="{{ route('jadwal-kuliah.create') }}">Tambah Jadwal</a>
+        @endrole
         |
         <a href="{{ route('dosen.index') }}">Data Dosen</a>
         |
@@ -56,18 +60,25 @@
                     <td>{{ $jk->hari }}</td>
                     <td>{{ substr($jk->jam_mulai, 0, 5) }} - {{ substr($jk->jam_selesai, 0, 5) }}</td>
                     <td>
-                        <a href="{{ route('jadwal-kuliah.edit', $jk->id) }}" class="btn">Ubah</a>
+                        @role('admin')
+                            <a href="{{ route('jadwal-kuliah.edit', $jk->id) }}" class="btn">
+                                Ubah
+                            </a>
 
-                        <form
-                            action="{{ route('jadwal-kuliah.destroy', $jk->id) }}"
-                            method="POST"
-                            style="display: inline"
-                            onsubmit="return confirm('Yakin ingin menghapus jadwal ini?')"
-                        >
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit">Hapus</button>
-                        </form>
+                            <form
+                                action="{{ route('jadwal-kuliah.destroy', $jk->id) }}"
+                                method="POST"
+                                style="display: inline"
+                                onsubmit="return confirm('Yakin ingin menghapus jadwal ini?')"
+                            >
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="submit">Hapus</button>
+                            </form>
+                        @else
+                            -
+                        @endrole
                     </td>
                 </tr>
             @empty
@@ -78,4 +89,5 @@
         </tbody>
     </table>
 </body>
+
 </html>
