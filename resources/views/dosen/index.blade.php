@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -9,6 +10,8 @@
     </style>
 </head>
 <body>
+    @include('partials.nav')
+
     <h1>Data Dosen</h1>
 
     @if (session('success'))
@@ -16,7 +19,9 @@
     @endif
 
     <p>
-        <a href="{{ route('dosen.create') }}">Tambah Dosen</a>
+        @role('admin')
+            <a href="{{ route('dosen.create') }}">Tambah Dosen</a>
+        @endrole
         |
         <a href="{{ route('mahasiswa.index') }}">Data Mahasiswa</a>
         |
@@ -45,26 +50,32 @@
         <tbody>
             @forelse ($dosen as $dsn)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $dosen->firstItem() + $loop->index }}</td>
                     <td>{{ $dsn->nidn }}</td>
                     <td>{{ $dsn->nama }}</td>
                     <td>{{ $dsn->bidang_keahlian }}</td>
                     <td>{{ $dsn->email }}</td>
                     <td>{{ $dsn->no_telepon }}</td>
                     <td>
-                        <a href="{{ route('dosen.edit', $dsn->id) }}" class="btn">Ubah</a>
+                        @role('admin')
+                            <a href="{{ route('dosen.edit', $dsn->id) }}" class="btn">
+                                Ubah
+                            </a>
 
-                        <form
-                            action="{{ route('dosen.destroy', $dsn->id) }}"
-                            method="POST"
-                            style="display: inline"
-                            onsubmit="return confirm('Yakin ingin menghapus data dosen ini?')"
-                        >
-                            @csrf
-                            @method('DELETE')
+                            <form
+                                action="{{ route('dosen.destroy', $dsn->id) }}"
+                                method="POST"
+                                style="display: inline"
+                                onsubmit="return confirm('Yakin ingin menghapus data dosen ini?')"
+                            >
+                                @csrf
+                                @method('DELETE')
 
-                            <button type="submit">Hapus</button>
-                        </form>
+                                <button type="submit">Hapus</button>
+                            </form>
+                        @else
+                            -
+                        @endrole
                     </td>
                 </tr>
             @empty
@@ -74,5 +85,9 @@
             @endforelse
         </tbody>
     </table>
+
+    <div style="margin-top: 20px;">
+        {{ $dosen->links('pagination.custom') }}
+    </div>
 </body>
 </html>

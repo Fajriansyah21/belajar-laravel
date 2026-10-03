@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,10 @@
         @include('partials.style')
     </style>
 </head>
+
 <body>
+    @include('partials.nav')
+
     <h1>Data Mahasiswa</h1>
 
     @if (session('success'))
@@ -16,7 +20,9 @@
     @endif
 
     <p>
+        @role('admin')
         <a href="{{ route('mahasiswa.create') }}">Tambah Mahasiswa</a>
+        @endrole
         |
         <a href="{{ route('dosen.index') }}">Data Dosen</a>
         |
@@ -42,34 +48,39 @@
                 <th>Action</th>
             </tr>
         </thead>
-
         <tbody>
             @forelse ($mahasiswa as $mhs)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $mahasiswa->firstItem() + $loop->index }}</td>
                     <td>{{ $mhs->nim }}</td>
                     <td>{{ $mhs->nama }}</td>
                     <td>{{ $mhs->jurusan }}</td>
                     <td>{{ $mhs->angkatan }}</td>
                     <td>{{ $mhs->email }}</td>
                     <td>{{ $mhs->kelas->nama_kelas ?? '-' }}</td>
+                    
                     <td>
-                        <a href="{{ route('mahasiswa.edit', $mhs->id) }}" class="btn">
-                            Ubah
-                        </a>
+                        @role('admin')
+                            <a href="{{ route('mahasiswa.edit', $mhs->id) }}" class="btn">
+                                Ubah
+                            </a>
 
-                        <form
-                            action="{{ route('mahasiswa.destroy', $mhs->id) }}"
-                            method="POST"
-                            style="display: inline"
-                            onsubmit="return confirm('Yakin ingin menghapus data mahasiswa ini?')"
-                        >
-                            @csrf
-                            @method('DELETE')
+                            <form
+                                action="{{ route('mahasiswa.destroy', $mhs->id) }}"
+                                method="POST"
+                                style="display: inline"
+                                onsubmit="return confirm('Yakin ingin menghapus data mahasiswa ini?')"
+                            >
+                                @csrf
+                                @method('DELETE')
 
-                            <button type="submit">Hapus</button>
-                        </form>
+                                <button type="submit">Hapus</button>
+                            </form>
+                        @else
+                            <span>-</span>
+                        @endrole
                     </td>
+
                 </tr>
             @empty
                 <tr>
@@ -78,5 +89,8 @@
             @endforelse
         </tbody>
     </table>
+
+    {{ $mahasiswa->links('pagination.custom') }}
 </body>
+
 </html>

@@ -31,7 +31,7 @@ class KelasController extends Controller
                 'max:50',
                 Rule::unique('kelas', 'nama_kelas'),
             ],
-            'angkatan' => ['required', 'integer', 'min:10', 'max:20'],
+            'angkatan' => ['required', 'integer', 'min:10', 'max:30'],
             'jurusan' => ['required', 'string', 'max:100'],
         ]);
 
@@ -56,7 +56,7 @@ class KelasController extends Controller
                 'max:50',
                 Rule::unique('kelas', 'nama_kelas')->ignore($kls->id),
             ],
-            'angkatan' => ['required', 'integer', 'min:10', 'max:20'],
+            'angkatan' => ['required', 'integer', 'min:10', 'max:30'],
             'jurusan' => ['required', 'string', 'max:100'],
         ]);
 

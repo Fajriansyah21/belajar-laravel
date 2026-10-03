@@ -45,7 +45,7 @@
                 name="angkatan"
                 value="{{ old('angkatan') }}"
                 min="10"
-                max="20"
+                max="30"
                 required
             >
         </p>

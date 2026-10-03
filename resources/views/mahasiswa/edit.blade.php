@@ -6,6 +6,7 @@
     <title>Ubah Data Mahasiswa</title>
     <style>
         @include('partials.style')
+
         body {
             max-width: 600px;
         }

@@ -10,12 +10,16 @@ use Illuminate\View\View;
 
 class DosenController extends Controller
 {
+
     public function index(): View
     {
-        $dosen = Dosen::all();
+        $dosen = Dosen::orderBy('id')
+            ->paginate(10)
+            ->withQueryString();
 
         return view('dosen.index', compact('dosen'));
     }
+
 
     public function create(): View
     {

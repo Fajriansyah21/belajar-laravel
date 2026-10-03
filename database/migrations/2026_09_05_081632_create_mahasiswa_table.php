@@ -8,19 +8,20 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('mahasiswa', function (Blueprint $table): void {
-            $table->id();
-            $table->string('nim', 20)->unique();
-            $table->string('nama', 100);
-            $table->string('jurusan', 100);
-            $table->string('email', 100)->nullable();
-            $table->unsignedSmallInteger('angkatan');
-            $table->timestamps();
+        Schema::table('mahasiswa', function (Blueprint $table): void {
+            $table->foreignId('kelas_id')
+                ->nullable()
+                ->after('angkatan')
+                ->constrained('kelas')
+                ->nullOnDelete();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('mahasiswa');
+        Schema::table('mahasiswa', function (Blueprint $table): void {
+            $table->dropForeign(['kelas_id']);
+            $table->dropColumn('kelas_id');
+        });
     }
 };
