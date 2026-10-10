@@ -14,6 +14,8 @@
 </head>
 
 <body>
+    @include('partials.nav')
+
     <h1>Jadwal Kuliah</h1>
 
     @if (session('success'))
