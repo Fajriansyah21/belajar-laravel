@@ -10,19 +10,18 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__ . '/../routes/console.php',
         health: '/up',
     )
-
     ->withMiddleware(function (Middleware $middleware): void {
-        // Arahkan pengguna yang sudah login ke halaman mahasiswa
-        $middleware->redirectUsersTo(fn() => route('mahasiswa.index'));
+        // Arahkan user yang sudah login ke menu pertama yang boleh diaksesnya.
+        $middleware->redirectUsersTo(
+            fn () => auth()->user()?->firstAccessibleMenuUrl() ?? route('login')
+        );
 
-        // Alias middleware Spatie
         $middleware->alias([
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
     })
-
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();

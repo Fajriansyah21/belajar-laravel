@@ -15,7 +15,6 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name',
-        'username',
         'email',
         'password',
     ];
@@ -31,5 +30,19 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * URL menu pertama yang bisa diakses user berdasarkan permission menu.
+     */
+    public function firstAccessibleMenuUrl(): string
+    {
+        foreach (config('menu') as $menu) {
+            if ($this->can($menu['permission'])) {
+                return route($menu['route']);
+            }
+        }
+
+        return '/';
     }
 }

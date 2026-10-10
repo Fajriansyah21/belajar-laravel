@@ -6,50 +6,49 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class RolePermissionSeeder extends Seeder
 {
     public function run(): void
     {
-        $permissions = ['lihat-data', 'tambah-data', 'ubah-data', 'hapus-data'];
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
+        $permissions = ['lihat-data', 'tambah-data', 'ubah-data', 'hapus-data'];
+        $menuPermissions = [
+            'menu-mahasiswa',
+            'menu-dosen',
+            'menu-mata-kuliah',
+            'menu-ruangan',
+            'menu-kelas',
+            'menu-jadwal-kuliah',
+        ];
+
+        foreach (array_merge($permissions, $menuPermissions) as $permission) {
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'web',
+            ]);
         }
 
         $roleAdmin = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
-        $roleAdmin->syncPermissions($permissions);
-
-        $roleDosen = Role::firstOrCreate(['name' => 'dosen', 'guard_name' => 'web']);
-        $roleDosen->syncPermissions(['lihat-data']);
+        $roleAdmin->syncPermissions(array_merge($permissions, $menuPermissions));
 
         $roleMahasiswa = Role::firstOrCreate(['name' => 'mahasiswa', 'guard_name' => 'web']);
-        $roleMahasiswa->syncPermissions(['lihat-data']);
+        $roleMahasiswa->syncPermissions(['lihat-data', 'menu-jadwal-kuliah']);
 
         $admin = User::firstOrCreate(
             ['email' => 'admin@example.test'],
-            [
-                'name' => 'Administrator',
-                'password' => 'password',
-            ]
+            ['name' => 'Administrator', 'password' => 'password']
         );
-        if (empty($admin->username)) {
-            $admin->username = 'administrator';
-            $admin->save();
-        }
         $admin->syncRoles(['admin']);
 
         $mahasiswa = User::firstOrCreate(
             ['email' => 'mahasiswa@example.test'],
-            [
-                'name' => 'Mahasiswa Demo',
-                'password' => 'password',
-            ]
+            ['name' => 'Mahasiswa Demo', 'password' => 'password']
         );
-        if (empty($mahasiswa->username)) {
-            $mahasiswa->username = 'mahasiswa-demo';
-            $mahasiswa->save();
-        }
         $mahasiswa->syncRoles(['mahasiswa']);
+
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 }

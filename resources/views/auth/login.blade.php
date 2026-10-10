@@ -12,26 +12,19 @@
         .login-box .field { margin-bottom: 16px; }
         .login-box button { width: 100%; }
         .remember { font-weight: normal; }
-        .hint { margin-top: 16px; font-size: 13px; color: #555; }
     </style>
 </head>
 <body>
     <div class="login-box">
         <h1>Login</h1>
-
         @if ($errors->any())
-            <ul class="errors">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+            <ul class="errors">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
         @endif
-
-        <form method="POST" action="{{ route('login.store') }}">
+        <form method="POST" action="{{ route('login') }}">
             @csrf
             <div class="field">
-                <label for="login">Email atau Username</label>
-                <input type="text" id="login" name="login" value="{{ old('login') }}" autocomplete="username" required autofocus>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{ old('email') }}" autocomplete="username" required autofocus>
             </div>
             <div class="field">
                 <label for="password">Password</label>
@@ -42,12 +35,6 @@
             </div>
             <button type="submit">Masuk</button>
         </form>
-
-        <p class="hint">
-            Akun uji coba bawaan (jika seed sebelumnya sudah dijalankan):<br>
-            admin@example.test / password<br>
-            mahasiswa@example.test / password
-        </p>
     </div>
 </body>
 </html>

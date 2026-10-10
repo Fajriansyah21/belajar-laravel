@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class AuthController extends Controller
@@ -17,29 +18,19 @@ class AuthController extends Controller
     public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            // 'email' tetap diterima agar pemanggil form lama tidak langsung rusak.
-            'login' => ['required_without:email', 'nullable', 'string'],
-            'email' => ['required_without:login', 'nullable', 'string'],
-            'password' => ['required', 'string'],
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
 
-        $identifier = $credentials['login'] ?? $credentials['email'];
-        $loginField = filter_var($identifier, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-
-        if (Auth::attempt([
-            $loginField => $identifier,
-            'password' => $credentials['password'],
-        ], $request->boolean('remember'))) {
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('mahasiswa.index'));
+            return redirect()->intended(auth()->user()->firstAccessibleMenuUrl());
         }
 
-        return back()
-            ->withErrors([
-                'login' => 'Email/username atau password tidak sesuai.',
-            ])
-            ->withInput($request->only('login', 'email')); 
+        throw ValidationException::withMessages([
+            'email' => ['Email atau password salah.'],
+        ]);
     }
 
     public function logout(Request $request): RedirectResponse

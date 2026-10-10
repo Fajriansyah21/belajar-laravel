@@ -1,13 +1,21 @@
 @auth
     <nav class="main-nav">
         <div class="nav-links">
+            @foreach (config('menu') as $menu)
+                @can($menu['permission'])
+                    <a href="{{ route($menu['route']) }}">{{ $menu['label'] }}</a>
+                @endcan
+            @endforeach
+
             @role('admin')
-                <a href="{{ route('users.index') }}">Manajemen Pengguna</a>
+                <a href="{{ route('role.index') }}">Role</a>
+                <a href="{{ route('pengguna.index') }}">Pengguna</a>
             @endrole
         </div>
+
         <div class="nav-user">
             <span class="user-info">
-                {{ auth()->user()->username ?? auth()->user()->name }}
+                {{ auth()->user()->name }}
                 ({{ auth()->user()->getRoleNames()->implode(', ') }})
             </span>
             <form method="POST" action="{{ route('logout') }}">
