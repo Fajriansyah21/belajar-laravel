@@ -17,11 +17,19 @@ class AuthController extends Controller
     public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            // 'email' tetap diterima agar pemanggil form lama tidak langsung rusak.
+            'login' => ['required_without:email', 'nullable', 'string'],
+            'email' => ['required_without:login', 'nullable', 'string'],
             'password' => ['required', 'string'],
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        $identifier = $credentials['login'] ?? $credentials['email'];
+        $loginField = filter_var($identifier, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        if (Auth::attempt([
+            $loginField => $identifier,
+            'password' => $credentials['password'],
+        ], $request->boolean('remember'))) {
             $request->session()->regenerate();
 
             return redirect()->intended(route('mahasiswa.index'));
@@ -29,9 +37,9 @@ class AuthController extends Controller
 
         return back()
             ->withErrors([
-                'email' => 'Email atau password tidak sesuai.',
+                'login' => 'Email/username atau password tidak sesuai.',
             ])
-            ->onlyInput('email');
+            ->withInput($request->only('login', 'email')); 
     }
 
     public function logout(Request $request): RedirectResponse

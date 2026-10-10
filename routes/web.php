@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -9,14 +8,12 @@ use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MataKuliahController;
 use App\Http\Controllers\RuanganController;
+use App\Http\Controllers\UserController;
 
 // Login hanya untuk pengguna yang belum login.
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLoginForm'])
-        ->name('login');
-
-    Route::post('/login', [AuthController::class, 'login'])
-        ->name('login.store');
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.store');
 });
 
 // Logout hanya untuk pengguna yang sudah login.
@@ -31,45 +28,24 @@ Route::get('/', function () {
 
 // Semua pengguna yang login boleh melihat daftar data.
 Route::middleware('auth')->group(function () {
-    Route::resource('mahasiswa', MahasiswaController::class)
-        ->only(['index']);
-
-    Route::resource('dosen', DosenController::class)
-        ->only(['index']);
-
-    Route::resource('mata-kuliah', MataKuliahController::class)
-        ->only(['index']);
-
-    Route::resource('ruangan', RuanganController::class)
-        ->only(['index']);
-
-    Route::resource('kelas', KelasController::class)
-        ->only(['index']);
-
-    Route::resource('jadwal-kuliah', JadwalKuliahController::class)
-        ->only(['index']);
+    Route::resource('mahasiswa', MahasiswaController::class)->only(['index']);
+    Route::resource('dosen', DosenController::class)->only(['index']);
+    Route::resource('mata-kuliah', MataKuliahController::class)->only(['index']);
+    Route::resource('ruangan', RuanganController::class)->only(['index']);
+    Route::resource('kelas', KelasController::class)->only(['index'])->parameters(['kelas' => 'kls']);
+    Route::resource('jadwal-kuliah', JadwalKuliahController::class)->only(['index']);
 });
 
-// Hanya admin yang boleh melakukan CRUD.
+// Hanya admin yang boleh melakukan CRUD data dan mengelola akun pengguna.
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::resource('mahasiswa', MahasiswaController::class)
-        ->except(['index', 'show']);
+    Route::resource('users', UserController::class)->except(['show']);
 
-    Route::resource('dosen', DosenController::class)
-        ->except(['index', 'show']);
-
-    Route::resource('mata-kuliah', MataKuliahController::class)
-        ->except(['index', 'show']);
-
-    Route::resource('ruangan', RuanganController::class)
-        ->except(['index', 'show']);
-
+    Route::resource('mahasiswa', MahasiswaController::class)->except(['index', 'show']);
+    Route::resource('dosen', DosenController::class)->except(['index', 'show']);
+    Route::resource('mata-kuliah', MataKuliahController::class)->except(['index', 'show']);
+    Route::resource('ruangan', RuanganController::class)->except(['index', 'show']);
     Route::resource('kelas', KelasController::class)
         ->except(['index', 'show'])
-        ->parameters([
-            'kelas' => 'kls',
-        ]);
-
-    Route::resource('jadwal-kuliah', JadwalKuliahController::class)
-        ->except(['index', 'show']);
+        ->parameters(['kelas' => 'kls']);
+    Route::resource('jadwal-kuliah', JadwalKuliahController::class)->except(['index', 'show']);
 });
