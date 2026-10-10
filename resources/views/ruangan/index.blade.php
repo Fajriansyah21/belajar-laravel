@@ -20,7 +20,7 @@
     @endif
 
     <p>
-        @can('tambah-data')
+        @can('ruangan.create')
             <a href="{{ route('ruangan.create') }}">Tambah Ruangan</a>
         @endcan
         |
@@ -58,13 +58,13 @@
                     <td>{{ $r->kapasitas }}</td>
                     <td>{{ $r->is_lab ? 'Ya' : 'Tidak' }}</td>
                     <td>
-                                                @can('ubah-data')
+                        @can('ruangan.edit')
                             <a href="{{ route('ruangan.edit', $r->id) }}" class="btn">
                                 Ubah
                             </a>
                         @endcan
 
-                        @can('hapus-data')
+                        @can('ruangan.delete')
                             <form
                                 action="{{ route('ruangan.destroy', $r->id) }}"
                                 method="POST"

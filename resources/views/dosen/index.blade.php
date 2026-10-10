@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -19,7 +18,7 @@
     @endif
 
     <p>
-        @can('tambah-data')
+        @can('dosen.create')
             <a href="{{ route('dosen.create') }}">Tambah Dosen</a>
         @endcan
         |
@@ -57,13 +56,13 @@
                     <td>{{ $dsn->email }}</td>
                     <td>{{ $dsn->no_telepon }}</td>
                     <td>
-                                                @can('ubah-data')
+                        @can('dosen.edit')
                             <a href="{{ route('dosen.edit', $dsn->id) }}" class="btn">
                                 Ubah
                             </a>
                         @endcan
 
-                        @can('hapus-data')
+                        @can('dosen.delete')
                             <form
                                 action="{{ route('dosen.destroy', $dsn->id) }}"
                                 method="POST"
@@ -90,4 +89,3 @@
     </div>
 </body>
 </html>
-

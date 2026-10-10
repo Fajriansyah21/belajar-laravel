@@ -23,7 +23,7 @@
     @endif
 
     <p>
-        @can('tambah-data')
+        @can('jadwal-kuliah.create')
             <a href="{{ route('jadwal-kuliah.create') }}">Tambah Jadwal</a>
         @endcan
         |
@@ -62,13 +62,13 @@
                     <td>{{ $jk->hari }}</td>
                     <td>{{ substr($jk->jam_mulai, 0, 5) }} - {{ substr($jk->jam_selesai, 0, 5) }}</td>
                     <td>
-                                                @can('ubah-data')
+                        @can('jadwal-kuliah.edit')
                             <a href="{{ route('jadwal-kuliah.edit', $jk->id) }}" class="btn">
                                 Ubah
                             </a>
                         @endcan
 
-                        @can('hapus-data')
+                        @can('jadwal-kuliah.delete')
                             <form
                                 action="{{ route('jadwal-kuliah.destroy', $jk->id) }}"
                                 method="POST"

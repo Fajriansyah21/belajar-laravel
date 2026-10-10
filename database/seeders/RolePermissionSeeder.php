@@ -14,7 +14,15 @@ class RolePermissionSeeder extends Seeder
     {
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        $permissions = ['lihat-data', 'tambah-data', 'ubah-data', 'hapus-data'];
+        // Permission umum yang masih dipertahankan untuk kompatibilitas.
+        $permissions = [
+            'lihat-data',
+            'tambah-data',
+            'ubah-data',
+            'hapus-data',
+        ];
+
+        // Daftar menu yang tersedia.
         $menuPermissions = [
             'menu-mahasiswa',
             'menu-dosen',
@@ -24,29 +32,86 @@ class RolePermissionSeeder extends Seeder
             'menu-jadwal-kuliah',
         ];
 
-        foreach (array_merge($permissions, $menuPermissions) as $permission) {
+        // Daftar resource dan aksi CRUD khusus setiap menu.
+        $resources = [
+            'mahasiswa',
+            'dosen',
+            'mata-kuliah',
+            'ruangan',
+            'kelas',
+            'jadwal-kuliah',
+        ];
+
+        $actions = [
+            'view',
+            'create',
+            'edit',
+            'delete',
+        ];
+
+        // Membuat permission khusus, misalnya mahasiswa.create.
+        $resourcePermissions = [];
+
+        foreach ($resources as $resource) {
+            foreach ($actions as $action) {
+                $resourcePermissions[] = $resource . '.' . $action;
+            }
+        }
+
+        // Gabungkan semua permission yang perlu tersedia.
+        $allPermissions = array_merge(
+            $permissions,
+            $menuPermissions,
+            $resourcePermissions
+        );
+
+        foreach ($allPermissions as $permission) {
             Permission::firstOrCreate([
                 'name' => $permission,
                 'guard_name' => 'web',
             ]);
         }
 
-        $roleAdmin = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
-        $roleAdmin->syncPermissions(array_merge($permissions, $menuPermissions));
+        // Role admin tetap memiliki seluruh permission.
+        $roleAdmin = Role::firstOrCreate([
+            'name' => 'admin',
+            'guard_name' => 'web',
+        ]);
 
-        $roleMahasiswa = Role::firstOrCreate(['name' => 'mahasiswa', 'guard_name' => 'web']);
-        $roleMahasiswa->syncPermissions(['lihat-data', 'menu-jadwal-kuliah']);
+        $roleAdmin->syncPermissions($allPermissions);
 
+        // Role mahasiswa hanya diberi akses melihat jadwal kuliah.
+        $roleMahasiswa = Role::firstOrCreate([
+            'name' => 'mahasiswa',
+            'guard_name' => 'web',
+        ]);
+
+        $roleMahasiswa->syncPermissions([
+            'lihat-data',
+            'menu-jadwal-kuliah',
+            'jadwal-kuliah.view',
+        ]);
+
+        // Membuat akun admin demo jika belum tersedia.
         $admin = User::firstOrCreate(
             ['email' => 'admin@example.test'],
-            ['name' => 'Administrator', 'password' => 'password']
+            [
+                'name' => 'Administrator',
+                'password' => 'password',
+            ]
         );
+
         $admin->syncRoles(['admin']);
 
+        // Membuat akun mahasiswa demo jika belum tersedia.
         $mahasiswa = User::firstOrCreate(
             ['email' => 'mahasiswa@example.test'],
-            ['name' => 'Mahasiswa Demo', 'password' => 'password']
+            [
+                'name' => 'Mahasiswa Demo',
+                'password' => 'password',
+            ]
         );
+
         $mahasiswa->syncRoles(['mahasiswa']);
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();

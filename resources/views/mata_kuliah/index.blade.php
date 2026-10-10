@@ -20,7 +20,7 @@
     @endif
 
     <p>
-        @can('tambah-data')
+        @can('mata-kuliah.create')
             <a href="{{ route('mata-kuliah.create') }}">
                 Tambah Mata Kuliah
             </a>
@@ -58,13 +58,13 @@
                     <td>{{ $mk->sks }}</td>
                     <td>{{ $mk->semester }}</td>
                     <td>
-                        @can('ubah-data')
+                        @can('mata-kuliah.edit')
                             <a href="{{ route('mata-kuliah.edit', $mk->id) }}" class="btn">
                                 Ubah
                             </a>
                         @endcan
 
-                        @can('hapus-data')
+                        @can('mata-kuliah.delete')
                             <form
                                 action="{{ route('mata-kuliah.destroy', $mk->id) }}"
                                 method="POST"

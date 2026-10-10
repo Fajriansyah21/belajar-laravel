@@ -20,8 +20,8 @@
     @endif
 
     <p>
-        @can('tambah-data')
-        <a href="{{ route('mahasiswa.create') }}">Tambah Mahasiswa</a>
+        @can('mahasiswa.create')
+            <a href="{{ route('mahasiswa.create') }}">Tambah Mahasiswa</a>
         @endcan
         |
         <a href="{{ route('dosen.index') }}">Data Dosen</a>
@@ -58,15 +58,15 @@
                     <td>{{ $mhs->angkatan }}</td>
                     <td>{{ $mhs->email }}</td>
                     <td>{{ $mhs->kelas->nama_kelas ?? '-' }}</td>
-                    
+
                     <td>
-                                                @can('ubah-data')
+                        @can('mahasiswa.edit')
                             <a href="{{ route('mahasiswa.edit', $mhs->id) }}" class="btn">
                                 Ubah
                             </a>
                         @endcan
 
-                        @can('hapus-data')
+                        @can('mahasiswa.delete')
                             <form
                                 action="{{ route('mahasiswa.destroy', $mhs->id) }}"
                                 method="POST"
@@ -79,7 +79,6 @@
                             </form>
                         @endcan
                     </td>
-
                 </tr>
             @empty
                 <tr>
