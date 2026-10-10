@@ -11,6 +11,8 @@
 </head>
 
 <body>
+    @include('partials.nav')
+
     <h1>Data Kelas</h1>
 
     @if (session('success'))
