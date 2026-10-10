@@ -20,11 +20,11 @@
     @endif
 
     <p>
-        @role('admin')
-        <a href="{{ route('mata-kuliah.create') }}">
-            Tambah Mata Kuliah
-        </a>
-        @endrole
+        @can('tambah-data')
+            <a href="{{ route('mata-kuliah.create') }}">
+                Tambah Mata Kuliah
+            </a>
+        @endcan
         |
         <a href="{{ route('dosen.index') }}">Data Dosen</a>
         |
@@ -58,11 +58,13 @@
                     <td>{{ $mk->sks }}</td>
                     <td>{{ $mk->semester }}</td>
                     <td>
-                        @role('admin')
+                        @can('ubah-data')
                             <a href="{{ route('mata-kuliah.edit', $mk->id) }}" class="btn">
                                 Ubah
                             </a>
+                        @endcan
 
+                        @can('hapus-data')
                             <form
                                 action="{{ route('mata-kuliah.destroy', $mk->id) }}"
                                 method="POST"
@@ -71,12 +73,9 @@
                             >
                                 @csrf
                                 @method('DELETE')
-
                                 <button type="submit">Hapus</button>
                             </form>
-                        @else
-                            -
-                        @endrole
+                        @endcan
                     </td>
                 </tr>
             @empty

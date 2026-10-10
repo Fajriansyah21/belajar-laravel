@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -23,9 +23,9 @@
     @endif
 
     <p>
-        @role('admin')
+        @can('tambah-data')
             <a href="{{ route('jadwal-kuliah.create') }}">Tambah Jadwal</a>
-        @endrole
+        @endcan
         |
         <a href="{{ route('dosen.index') }}">Data Dosen</a>
         |
@@ -62,25 +62,24 @@
                     <td>{{ $jk->hari }}</td>
                     <td>{{ substr($jk->jam_mulai, 0, 5) }} - {{ substr($jk->jam_selesai, 0, 5) }}</td>
                     <td>
-                        @role('admin')
+                                                @can('ubah-data')
                             <a href="{{ route('jadwal-kuliah.edit', $jk->id) }}" class="btn">
                                 Ubah
                             </a>
+                        @endcan
 
+                        @can('hapus-data')
                             <form
                                 action="{{ route('jadwal-kuliah.destroy', $jk->id) }}"
                                 method="POST"
                                 style="display: inline"
-                                onsubmit="return confirm('Yakin ingin menghapus jadwal ini?')"
+                                onsubmit="return confirm('Yakin ingin menghapus data ini?')"
                             >
                                 @csrf
                                 @method('DELETE')
-
                                 <button type="submit">Hapus</button>
                             </form>
-                        @else
-                            -
-                        @endrole
+                        @endcan
                     </td>
                 </tr>
             @empty

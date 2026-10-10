@@ -25,42 +25,60 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
 Route::middleware('auth')->group(function () {
+    
     Route::middleware('permission:menu-mahasiswa')->group(function () {
         Route::resource('mahasiswa', MahasiswaController::class)
-            ->except(['index', 'show'])
-            ->middleware('role:admin');
+            ->only(['create', 'store'])->middleware('permission:tambah-data');
+        Route::resource('mahasiswa', MahasiswaController::class)
+            ->only(['edit', 'update'])->middleware('permission:ubah-data');
+        Route::resource('mahasiswa', MahasiswaController::class)
+            ->only(['destroy'])->middleware('permission:hapus-data');
         Route::resource('mahasiswa', MahasiswaController::class)
             ->only(['index', 'show']);
     });
 
     Route::middleware('permission:menu-dosen')->group(function () {
         Route::resource('dosen', DosenController::class)
-            ->except(['index', 'show'])
-            ->middleware('role:admin');
+            ->only(['create', 'store'])->middleware('permission:tambah-data');
+        Route::resource('dosen', DosenController::class)
+            ->only(['edit', 'update'])->middleware('permission:ubah-data');
+        Route::resource('dosen', DosenController::class)
+            ->only(['destroy'])->middleware('permission:hapus-data');
         Route::resource('dosen', DosenController::class)
             ->only(['index', 'show']);
     });
 
     Route::middleware('permission:menu-mata-kuliah')->group(function () {
         Route::resource('mata-kuliah', MataKuliahController::class)
-            ->except(['index', 'show'])
-            ->middleware('role:admin');
+            ->only(['create', 'store'])->middleware('permission:tambah-data');
+        Route::resource('mata-kuliah', MataKuliahController::class)
+            ->only(['edit', 'update'])->middleware('permission:ubah-data');
+        Route::resource('mata-kuliah', MataKuliahController::class)
+            ->only(['destroy'])->middleware('permission:hapus-data');
         Route::resource('mata-kuliah', MataKuliahController::class)
             ->only(['index', 'show']);
     });
 
     Route::middleware('permission:menu-ruangan')->group(function () {
         Route::resource('ruangan', RuanganController::class)
-            ->except(['index', 'show'])
-            ->middleware('role:admin');
+            ->only(['create', 'store'])->middleware('permission:tambah-data');
+        Route::resource('ruangan', RuanganController::class)
+            ->only(['edit', 'update'])->middleware('permission:ubah-data');
+        Route::resource('ruangan', RuanganController::class)
+            ->only(['destroy'])->middleware('permission:hapus-data');
         Route::resource('ruangan', RuanganController::class)
             ->only(['index', 'show']);
     });
 
     Route::middleware('permission:menu-kelas')->group(function () {
         Route::resource('kelas', KelasController::class)
-            ->except(['index', 'show'])
-            ->middleware('role:admin')
+            ->only(['create', 'store'])->middleware('permission:tambah-data')
+            ->parameters(['kelas' => 'kls']);
+        Route::resource('kelas', KelasController::class)
+            ->only(['edit', 'update'])->middleware('permission:ubah-data')
+            ->parameters(['kelas' => 'kls']);
+        Route::resource('kelas', KelasController::class)
+            ->only(['destroy'])->middleware('permission:hapus-data')
             ->parameters(['kelas' => 'kls']);
         Route::resource('kelas', KelasController::class)
             ->only(['index', 'show'])
@@ -69,8 +87,11 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('permission:menu-jadwal-kuliah')->group(function () {
         Route::resource('jadwal-kuliah', JadwalKuliahController::class)
-            ->except(['index', 'show'])
-            ->middleware('role:admin');
+            ->only(['create', 'store'])->middleware('permission:tambah-data');
+        Route::resource('jadwal-kuliah', JadwalKuliahController::class)
+            ->only(['edit', 'update'])->middleware('permission:ubah-data');
+        Route::resource('jadwal-kuliah', JadwalKuliahController::class)
+            ->only(['destroy'])->middleware('permission:hapus-data');
         Route::resource('jadwal-kuliah', JadwalKuliahController::class)
             ->only(['index', 'show']);
     });

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -20,9 +20,9 @@
     @endif
 
     <p>
-        @role('admin')
+        @can('tambah-data')
         <a href="{{ route('mahasiswa.create') }}">Tambah Mahasiswa</a>
-        @endrole
+        @endcan
         |
         <a href="{{ route('dosen.index') }}">Data Dosen</a>
         |
@@ -60,25 +60,24 @@
                     <td>{{ $mhs->kelas->nama_kelas ?? '-' }}</td>
                     
                     <td>
-                        @role('admin')
+                                                @can('ubah-data')
                             <a href="{{ route('mahasiswa.edit', $mhs->id) }}" class="btn">
                                 Ubah
                             </a>
+                        @endcan
 
+                        @can('hapus-data')
                             <form
                                 action="{{ route('mahasiswa.destroy', $mhs->id) }}"
                                 method="POST"
                                 style="display: inline"
-                                onsubmit="return confirm('Yakin ingin menghapus data mahasiswa ini?')"
+                                onsubmit="return confirm('Yakin ingin menghapus data ini?')"
                             >
                                 @csrf
                                 @method('DELETE')
-
                                 <button type="submit">Hapus</button>
                             </form>
-                        @else
-                            <span>-</span>
-                        @endrole
+                        @endcan
                     </td>
 
                 </tr>
