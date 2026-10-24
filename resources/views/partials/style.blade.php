@@ -1,7 +1,6 @@
-
 body {
     font-family: Arial, sans-serif;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 30px auto;
     padding: 0 20px;
 }
@@ -78,6 +77,32 @@ button:hover,
     background-color: #e0e0e0;
 }
 
+/* Tata letak tombol aksi di seluruh tabel */
+.action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.action-buttons form {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+}
+
+.action-buttons .btn,
+.action-buttons button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: 38px;
+    margin: 0;
+    padding: 8px 14px;
+    white-space: nowrap;
+}
+
 .errors {
     padding: 10px 10px 10px 30px;
     background-color: #ffecec;
@@ -152,3 +177,60 @@ button:hover,
     background-color: #f7f7f7;
     cursor: not-allowed;
 }
+
+/* Upload dan tampilan foto mahasiswa */
+input[type="file"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    border: 1px solid #999;
+    background-color: #fff;
+}
+
+.foto-thumb {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 6px;
+    display: block;
+}
+
+.foto-preview {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin: 8px 0;
+}
+
+.hint {
+    display: block;
+    font-size: 13px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.login-note {
+    margin: 15px 0;
+    padding: 12px 15px;
+    background-color: #fff8db;
+    border: 1px solid #e5d38a;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.login-note p {
+    margin: 5px 0;
+}
+
+.login-note hr {
+    border: 0;
+    border-top: 1px solid #e5d38a;
+    margin: 10px 0;
+}
+
+.login-note small {
+    color: #666;
+}
+

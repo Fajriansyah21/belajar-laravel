@@ -23,7 +23,11 @@
         </ul>
     @endif
 
-    <form action="{{ route('mahasiswa.update', $mahasiswa->id) }}" method="POST">
+    <form
+        action="{{ route('mahasiswa.update', $mahasiswa->id) }}"
+        method="POST"
+        enctype="multipart/form-data"
+    >
         @csrf
         @method('PUT')
 
@@ -101,6 +105,34 @@
                     </option>
                 @endforeach
             </select>
+        </p>
+
+        <p>
+            <label for="foto">Foto</label><br>
+
+            @if ($mahasiswa->foto)
+                <br>
+                <img
+                    src="{{ $mahasiswa->foto_url }}"
+                    alt="Foto {{ $mahasiswa->nama }}"
+                    class="foto-preview"
+                >
+                <br>
+            @else
+                <span>Belum ada foto.</span><br>
+            @endif
+
+            <input
+                type="file"
+                id="foto"
+                name="foto"
+                accept="image/jpeg,image/png,image/webp"
+            >
+
+            <span class="hint">
+                Kosongkan jika tidak ingin mengganti foto.
+                Maksimal 2 MB (JPG/JPEG/PNG/WebP).
+            </span>
         </p>
 
         <button type="submit">Simpan Perubahan</button>

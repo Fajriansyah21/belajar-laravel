@@ -19,6 +19,7 @@ class Mahasiswa extends Model
         'email',
         'angkatan',
         'kelas_id',
+        'foto',
     ];
 
     protected function casts(): array
@@ -26,6 +27,15 @@ class Mahasiswa extends Model
         return [
             'angkatan' => 'integer',
         ];
+    }
+
+    protected function fotoUrl(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::get(
+            fn () => $this->foto
+                ? asset('storage/' . $this->foto)
+                : null
+        );
     }
 
     public function kelas(): BelongsTo

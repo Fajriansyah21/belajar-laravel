@@ -7,9 +7,6 @@
     <title>Jadwal Kuliah</title>
     <style>
         @include('partials.style')
-        body {
-            max-width: 1200px;
-        }
     </style>
 </head>
 
@@ -18,25 +15,17 @@
 
     <h1>Jadwal Kuliah</h1>
 
+    <div class="page-actions">
+        @can('jadwal-kuliah.create')
+            <a href="{{ route('jadwal-kuliah.create') }}" class="btn">
+                + Tambah Jadwal Kuliah
+            </a>
+        @endcan
+    </div>
+
     @if (session('success'))
         <p class="success">{{ session('success') }}</p>
     @endif
-
-    <p>
-        @can('jadwal-kuliah.create')
-            <a href="{{ route('jadwal-kuliah.create') }}">Tambah Jadwal</a>
-        @endcan
-        |
-        <a href="{{ route('dosen.index') }}">Data Dosen</a>
-        |
-        <a href="{{ route('mahasiswa.index') }}">Data Mahasiswa</a>
-        |
-        <a href="{{ route('mata-kuliah.index') }}">Mata Kuliah</a>
-        |
-        <a href="{{ route('ruangan.index') }}">Ruangan</a>
-        |
-        <a href="{{ route('kelas.index') }}">Kelas</a>
-    </p>
 
     <table>
         <thead>
@@ -61,26 +50,27 @@
                     <td>{{ $jk->ruangan->nama }} ({{ $jk->ruangan->kode_ruangan }})</td>
                     <td>{{ $jk->hari }}</td>
                     <td>{{ substr($jk->jam_mulai, 0, 5) }} - {{ substr($jk->jam_selesai, 0, 5) }}</td>
-                    <td>
-                        @can('jadwal-kuliah.edit')
-                            <a href="{{ route('jadwal-kuliah.edit', $jk->id) }}" class="btn">
-                                Ubah
-                            </a>
-                        @endcan
 
-                        @can('jadwal-kuliah.delete')
-                            <form
-                                action="{{ route('jadwal-kuliah.destroy', $jk->id) }}"
-                                method="POST"
-                                style="display: inline"
-                                onsubmit="return confirm('Yakin ingin menghapus data ini?')"
-                            >
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit">Hapus</button>
-                            </form>
-                        @endcan
+                    <td>
+                        <div class="action-buttons">
+                            @can('jadwal-kuliah.edit')
+                                <a href="{{ route('jadwal-kuliah.edit', $jk->id) }}" class="btn">
+                                    Ubah
+                                </a>
+                            @endcan
+
+                            @can('jadwal-kuliah.delete')
+                                <form action="{{ route('jadwal-kuliah.destroy', $jk->id) }}" method="POST"
+                                    onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit">Hapus</button>
+                                </form>
+                            @endcan
+                        </div>
                     </td>
+
                 </tr>
             @empty
                 <tr>

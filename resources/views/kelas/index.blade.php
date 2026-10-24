@@ -15,25 +15,19 @@
 
     <h1>Data Kelas</h1>
 
+
+    <div class="page-actions">
+        @can('kelas.create')
+            <a href="{{ route('kelas.create') }}" class="btn">
+                + Tambah Kelas
+            </a>
+        @endcan
+    </div>
+
+
     @if (session('success'))
         <p class="success">{{ session('success') }}</p>
     @endif
-
-    <p>
-        @can('kelas.create')
-            <a href="{{ route('kelas.create') }}">Tambah Kelas</a>
-        @endcan
-        |
-        <a href="{{ route('dosen.index') }}">Data Dosen</a>
-        |
-        <a href="{{ route('mahasiswa.index') }}">Data Mahasiswa</a>
-        |
-        <a href="{{ route('mata-kuliah.index') }}">Mata Kuliah</a>
-        |
-        <a href="{{ route('ruangan.index') }}">Ruangan</a>
-        |
-        <a href="{{ route('jadwal-kuliah.index') }}">Jadwal Kuliah</a>
-    </p>
 
     <table>
         <thead>
@@ -53,26 +47,27 @@
                     <td>{{ $k->nama_kelas }}</td>
                     <td>{{ $k->angkatan }}</td>
                     <td>{{ $k->jurusan }}</td>
-                    <td>
-                        @can('kelas.edit')
-                            <a href="{{ route('kelas.edit', $k->id) }}" class="btn">
-                                Ubah
-                            </a>
-                        @endcan
 
-                        @can('kelas.delete')
-                            <form
-                                action="{{ route('kelas.destroy', $k->id) }}"
-                                method="POST"
-                                style="display: inline"
-                                onsubmit="return confirm('Yakin ingin menghapus data ini?')"
-                            >
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit">Hapus</button>
-                            </form>
-                        @endcan
+                    <td>
+                        <div class="action-buttons">
+                            @can('kelas.edit')
+                                <a href="{{ route('kelas.edit', $k->id) }}" class="btn">
+                                    Ubah
+                                </a>
+                            @endcan
+
+                            @can('kelas.delete')
+                                <form action="{{ route('kelas.destroy', $k->id) }}" method="POST"
+                                    onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit">Hapus</button>
+                                </form>
+                            @endcan
+                        </div>
                     </td>
+
                 </tr>
             @empty
                 <tr>

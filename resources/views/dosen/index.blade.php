@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,30 +9,25 @@
         @include('partials.style')
     </style>
 </head>
+
 <body>
     @include('partials.nav')
 
     <h1>Data Dosen</h1>
 
+
+    <div class="page-actions">
+        @can('dosen.create')
+            <a href="{{ route('dosen.create') }}" class="btn">
+                + Tambah Dosen
+            </a>
+        @endcan
+    </div>
+
+
     @if (session('success'))
         <p class="success">{{ session('success') }}</p>
     @endif
-
-    <p>
-        @can('dosen.create')
-            <a href="{{ route('dosen.create') }}">Tambah Dosen</a>
-        @endcan
-        |
-        <a href="{{ route('mahasiswa.index') }}">Data Mahasiswa</a>
-        |
-        <a href="{{ route('mata-kuliah.index') }}">Mata Kuliah</a>
-        |
-        <a href="{{ route('ruangan.index') }}">Ruangan</a>
-        |
-        <a href="{{ route('kelas.index') }}">Kelas</a>
-        |
-        <a href="{{ route('jadwal-kuliah.index') }}">Jadwal Kuliah</a>
-    </p>
 
     <table>
         <thead>
@@ -55,26 +51,27 @@
                     <td>{{ $dsn->bidang_keahlian }}</td>
                     <td>{{ $dsn->email }}</td>
                     <td>{{ $dsn->no_telepon }}</td>
-                    <td>
-                        @can('dosen.edit')
-                            <a href="{{ route('dosen.edit', $dsn->id) }}" class="btn">
-                                Ubah
-                            </a>
-                        @endcan
 
-                        @can('dosen.delete')
-                            <form
-                                action="{{ route('dosen.destroy', $dsn->id) }}"
-                                method="POST"
-                                style="display: inline"
-                                onsubmit="return confirm('Yakin ingin menghapus data ini?')"
-                            >
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit">Hapus</button>
-                            </form>
-                        @endcan
+                    <td>
+                        <div class="action-buttons">
+                            @can('dosen.edit')
+                                <a href="{{ route('dosen.edit', $dsn->id) }}" class="btn">
+                                    Ubah
+                                </a>
+                            @endcan
+
+                            @can('dosen.delete')
+                                <form action="{{ route('dosen.destroy', $dsn->id) }}" method="POST"
+                                    onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit">Hapus</button>
+                                </form>
+                            @endcan
+                        </div>
                     </td>
+
                 </tr>
             @empty
                 <tr>
@@ -88,4 +85,5 @@
         {{ $dosen->links('pagination.custom') }}
     </div>
 </body>
+
 </html>

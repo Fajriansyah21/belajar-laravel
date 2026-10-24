@@ -23,18 +23,30 @@
                 <td>{{ $role->name }}</td>
                 <td>{{ $role->permissions->pluck('name')->implode(', ') ?: '-' }}</td>
                 <td>{{ $role->users_count }}</td>
+                
                 <td>
                     @role('admin')
-                        <a href="{{ route('role.edit', $role->id) }}" class="btn">Ubah</a>
-                        <form action="{{ route('role.destroy', $role->id) }}" method="POST" style="display:inline" onsubmit="return confirm('Yakin ingin menghapus role ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit">Hapus</button>
-                        </form>
+                        <div class="action-buttons">
+                            <a href="{{ route('role.edit', $role->id) }}" class="btn">
+                                Ubah
+                            </a>
+
+                            <form
+                                action="{{ route('role.destroy', $role->id) }}"
+                                method="POST"
+                                onsubmit="return confirm('Yakin ingin menghapus role ini?')"
+                            >
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="submit">Hapus</button>
+                            </form>
+                        </div>
                     @else
                         <span>-</span>
                     @endrole
                 </td>
+
             </tr>
         @empty
             <tr><td colspan="5">Belum ada data role.</td></tr>

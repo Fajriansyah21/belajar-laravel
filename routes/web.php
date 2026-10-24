@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
     // CRUD Mahasiswa
     Route::middleware('permission:menu-mahasiswa')->group(function () {
         Route::resource('mahasiswa', MahasiswaController::class)
-            ->only(['index', 'show'])
+            ->only(['index'])
             ->middleware('permission:mahasiswa.view');
 
         Route::resource('mahasiswa', MahasiswaController::class)
@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function () {
     // CRUD Dosen
     Route::middleware('permission:menu-dosen')->group(function () {
         Route::resource('dosen', DosenController::class)
-            ->only(['index', 'show'])
+            ->only(['index'])
             ->middleware('permission:dosen.view');
 
         Route::resource('dosen', DosenController::class)
@@ -67,7 +67,7 @@ Route::middleware('auth')->group(function () {
     // CRUD Mata Kuliah
     Route::middleware('permission:menu-mata-kuliah')->group(function () {
         Route::resource('mata-kuliah', MataKuliahController::class)
-            ->only(['index', 'show'])
+            ->only(['index'])
             ->middleware('permission:mata-kuliah.view');
 
         Route::resource('mata-kuliah', MataKuliahController::class)
@@ -86,7 +86,7 @@ Route::middleware('auth')->group(function () {
     // CRUD Ruangan
     Route::middleware('permission:menu-ruangan')->group(function () {
         Route::resource('ruangan', RuanganController::class)
-            ->only(['index', 'show'])
+            ->only(['index'])
             ->middleware('permission:ruangan.view');
 
         Route::resource('ruangan', RuanganController::class)
@@ -105,7 +105,7 @@ Route::middleware('auth')->group(function () {
     // CRUD Kelas
     Route::middleware('permission:menu-kelas')->group(function () {
         Route::resource('kelas', KelasController::class)
-            ->only(['index', 'show'])
+            ->only(['index'])
             ->middleware('permission:kelas.view')
             ->parameters(['kelas' => 'kls']);
 
@@ -128,7 +128,7 @@ Route::middleware('auth')->group(function () {
     // CRUD Jadwal Kuliah
     Route::middleware('permission:menu-jadwal-kuliah')->group(function () {
         Route::resource('jadwal-kuliah', JadwalKuliahController::class)
-            ->only(['index', 'show'])
+            ->only(['index'])
             ->middleware('permission:jadwal-kuliah.view');
 
         Route::resource('jadwal-kuliah', JadwalKuliahController::class)

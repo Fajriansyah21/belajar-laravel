@@ -23,18 +23,30 @@
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->getRoleNames()->implode(', ') ?: '-' }}</td>
+                
                 <td>
                     @role('admin')
-                        <a href="{{ route('pengguna.edit', $user->id) }}" class="btn">Ubah</a>
-                        <form action="{{ route('pengguna.destroy', $user->id) }}" method="POST" style="display:inline" onsubmit="return confirm('Yakin ingin menghapus pengguna ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit">Hapus</button>
-                        </form>
+                        <div class="action-buttons">
+                            <a href="{{ route('pengguna.edit', $user->id) }}" class="btn">
+                                Ubah
+                            </a>
+
+                            <form
+                                action="{{ route('pengguna.destroy', $user->id) }}"
+                                method="POST"
+                                onsubmit="return confirm('Yakin ingin menghapus pengguna ini?')"
+                            >
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="submit">Hapus</button>
+                            </form>
+                        </div>
                     @else
                         <span>-</span>
                     @endrole
                 </td>
+
             </tr>
         @empty
             <tr><td colspan="5">Belum ada data pengguna.</td></tr>

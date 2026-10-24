@@ -15,30 +15,25 @@
 
     <h1>Data Mahasiswa</h1>
 
+
+    <div class="page-actions">
+        @can('mahasiswa.create')
+            <a href="{{ route('mahasiswa.create') }}" class="btn">
+                + Tambah Mahasiswa
+            </a>
+        @endcan
+    </div>
+
+
     @if (session('success'))
         <p class="success">{{ session('success') }}</p>
     @endif
-
-    <p>
-        @can('mahasiswa.create')
-            <a href="{{ route('mahasiswa.create') }}">Tambah Mahasiswa</a>
-        @endcan
-        |
-        <a href="{{ route('dosen.index') }}">Data Dosen</a>
-        |
-        <a href="{{ route('mata-kuliah.index') }}">Mata Kuliah</a>
-        |
-        <a href="{{ route('ruangan.index') }}">Ruangan</a>
-        |
-        <a href="{{ route('kelas.index') }}">Kelas</a>
-        |
-        <a href="{{ route('jadwal-kuliah.index') }}">Jadwal Kuliah</a>
-    </p>
 
     <table>
         <thead>
             <tr>
                 <th>No</th>
+                <th>Foto</th>
                 <th>NIM</th>
                 <th>Nama</th>
                 <th>Jurusan</th>
@@ -48,10 +43,20 @@
                 <th>Action</th>
             </tr>
         </thead>
+
         <tbody>
             @forelse ($mahasiswa as $mhs)
                 <tr>
                     <td>{{ $mahasiswa->firstItem() + $loop->index }}</td>
+
+                    <td>
+                        @if ($mhs->foto)
+                            <img src="{{ $mhs->foto_url }}" alt="Foto {{ $mhs->nama }}" class="foto-thumb">
+                        @else
+                            -
+                        @endif
+                    </td>
+
                     <td>{{ $mhs->nim }}</td>
                     <td>{{ $mhs->nama }}</td>
                     <td>{{ $mhs->jurusan }}</td>
@@ -59,30 +64,31 @@
                     <td>{{ $mhs->email }}</td>
                     <td>{{ $mhs->kelas->nama_kelas ?? '-' }}</td>
 
-                    <td>
-                        @can('mahasiswa.edit')
-                            <a href="{{ route('mahasiswa.edit', $mhs->id) }}" class="btn">
-                                Ubah
-                            </a>
-                        @endcan
 
-                        @can('mahasiswa.delete')
-                            <form
-                                action="{{ route('mahasiswa.destroy', $mhs->id) }}"
-                                method="POST"
-                                style="display: inline"
-                                onsubmit="return confirm('Yakin ingin menghapus data ini?')"
-                            >
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit">Hapus</button>
-                            </form>
-                        @endcan
+                    <td>
+                        <div class="action-buttons">
+                            @can('mahasiswa.edit')
+                                <a href="{{ route('mahasiswa.edit', $mhs->id) }}" class="btn">
+                                    Ubah
+                                </a>
+                            @endcan
+
+                            @can('mahasiswa.delete')
+                                <form action="{{ route('mahasiswa.destroy', $mhs->id) }}" method="POST"
+                                    onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit">Hapus</button>
+                                </form>
+                            @endcan
+                        </div>
                     </td>
+
                 </tr>
             @empty
                 <tr>
-                    <td colspan="8">Belum ada data mahasiswa.</td>
+                    <td colspan="9">Belum ada data mahasiswa.</td>
                 </tr>
             @endforelse
         </tbody>

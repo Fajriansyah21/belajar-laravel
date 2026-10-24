@@ -23,7 +23,11 @@
         </ul>
     @endif
 
-    <form action="{{ route('mahasiswa.store') }}" method="POST">
+    <form
+        action="{{ route('mahasiswa.store') }}"
+        method="POST"
+        enctype="multipart/form-data"
+    >
         @csrf
 
         <p>
@@ -100,6 +104,20 @@
                     </option>
                 @endforeach
             </select>
+        </p>
+
+        <p>
+            <label for="foto">Foto</label><br>
+            <input
+                type="file"
+                id="foto"
+                name="foto"
+                accept="image/jpeg,image/png,image/webp"
+            >
+            <span class="hint">
+                Maksimal 2 MB (JPG/JPEG/PNG/WebP).
+                Foto akan dikompres ke WebP dengan lebar maksimal 600 piksel.
+            </span>
         </p>
 
         <button type="submit">Simpan</button>
