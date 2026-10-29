@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Dosen;
 use App\Models\JadwalKuliah;
+use App\Models\LampiranJadwal;
 use App\Models\Kelas;
 use App\Models\MataKuliah;
 use App\Models\Ruangan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class JadwalKuliahController extends Controller
@@ -19,7 +22,8 @@ class JadwalKuliahController extends Controller
             'kelas',
             'mataKuliah',
             'dosen',
-            'ruangan'
+            'ruangan',
+            'lampiran'
         ])->get();
 
         return view('jadwal_kuliah.index', compact('jadwalKuliah'));
@@ -64,6 +68,8 @@ class JadwalKuliahController extends Controller
                 'date_format:H:i',
                 'after:jam_mulai'
             ],
+            'lampiran' => ['nullable', 'array', 'max:5'],
+            'lampiran.*' => ['file', 'mimes:pdf,doc,docx,jpg,jpeg,png,webp', 'max:5120'],
         ]);
 
         // Validasi bentrok ruangan
@@ -189,7 +195,24 @@ class JadwalKuliahController extends Controller
                 ]);
         }
 
-        JadwalKuliah::create($validated);
+        $files = $validated['lampiran'] ?? [];
+        unset($validated['lampiran']);
+        $jadwal = JadwalKuliah::create($validated);
+
+        foreach ($files as $file) {
+            $extension = $file->extension() ?: 'bin';
+            $path = $file->storeAs(
+                'lampiran-jadwal',
+                Str::uuid() . '.' . $extension,
+                'public'
+            );
+
+            LampiranJadwal::create([
+                'jadwal_kuliah_id' => $jadwal->id,
+                'path' => $path,
+                'nama_asli' => $file->getClientOriginalName(),
+            ]);
+        }
 
         return redirect()
             ->route('jadwal-kuliah.index')
@@ -244,6 +267,8 @@ class JadwalKuliahController extends Controller
                 'date_format:H:i',
                 'after:jam_mulai'
             ],
+            'lampiran' => ['nullable', 'array', 'max:5'],
+            'lampiran.*' => ['file', 'mimes:pdf,doc,docx,jpg,jpeg,png,webp', 'max:5120'],
         ]);
 
         // Validasi bentrok ruangan (exclude current)
@@ -372,7 +397,24 @@ class JadwalKuliahController extends Controller
                 ]);
         }
 
+        $files = $validated['lampiran'] ?? [];
+        unset($validated['lampiran']);
         $jadwal_kuliah->update($validated);
+
+        foreach ($files as $file) {
+            $extension = $file->extension() ?: 'bin';
+            $path = $file->storeAs(
+                'lampiran-jadwal',
+                Str::uuid() . '.' . $extension,
+                'public'
+            );
+
+            LampiranJadwal::create([
+                'jadwal_kuliah_id' => $jadwal_kuliah->id,
+                'path' => $path,
+                'nama_asli' => $file->getClientOriginalName(),
+            ]);
+        }
 
         return redirect()
             ->route('jadwal-kuliah.index')
@@ -382,6 +424,10 @@ class JadwalKuliahController extends Controller
     public function destroy(
         JadwalKuliah $jadwal_kuliah
     ): RedirectResponse {
+        foreach ($jadwal_kuliah->lampiran as $lampiran) {
+            Storage::disk('public')->delete($lampiran->path);
+        }
+
         $jadwal_kuliah->delete();
 
         return redirect()
