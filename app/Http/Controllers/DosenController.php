@@ -50,10 +50,14 @@ class DosenController extends Controller
         ]);
 
         if ($request->hasFile('foto')) {
-            $validated['foto'] = $this->imageUpload->store(
+            $photos = $this->imageUpload->storeWithThumbnail(
                 $request->file('foto'),
-                'dosen'
+                'dosen',
+                600,
+                150
             );
+            $validated['foto'] = $photos['foto'];
+            $validated['foto_thumbnail'] = $photos['thumbnail'];
         }
 
         Dosen::create($validated);
@@ -89,20 +93,26 @@ class DosenController extends Controller
         ]);
 
         $fotoLama = $dosen->foto;
+        $thumbnailLama = $dosen->foto_thumbnail;
 
         if ($request->hasFile('foto')) {
-            $validated['foto'] = $this->imageUpload->store(
+            $photos = $this->imageUpload->storeWithThumbnail(
                 $request->file('foto'),
-                'dosen'
+                'dosen',
+                600,
+                150
             );
+            $validated['foto'] = $photos['foto'];
+            $validated['foto_thumbnail'] = $photos['thumbnail'];
         } else {
-            unset($validated['foto']);
+            unset($validated['foto'], $validated['foto_thumbnail']);
         }
 
         $dosen->update($validated);
 
         if ($request->hasFile('foto')) {
             $this->imageUpload->delete($fotoLama);
+            $this->imageUpload->delete($thumbnailLama);
         }
 
         return redirect()
@@ -113,8 +123,10 @@ class DosenController extends Controller
     public function destroy(Dosen $dosen): RedirectResponse
     {
         $foto = $dosen->foto;
+        $thumbnail = $dosen->foto_thumbnail;
         $dosen->delete();
         $this->imageUpload->delete($foto);
+        $this->imageUpload->delete($thumbnail);
 
         return redirect()
             ->route('dosen.index')
