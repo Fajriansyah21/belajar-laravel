@@ -43,7 +43,7 @@
                     <td>{{ $dosen->firstItem() + $loop->index }}</td>
                     <td>
                         @if ($dsn->foto_url)
-                            <img class="dosen-thumbnail" src="{{ $dsn->foto_url }}" alt="Foto {{ $dsn->nama }}">
+                            <img class="dosen-thumbnail" src="{{ $dsn->foto_thumbnail_url }}" alt="Foto {{ $dsn->nama }}">
                         @else
                             <span>-</span>
                         @endif
