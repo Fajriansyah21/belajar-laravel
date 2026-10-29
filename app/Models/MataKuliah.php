@@ -17,6 +17,7 @@ class MataKuliah extends Model
         'nama_mata_kuliah',
         'sks',
         'semester',
+        'modul',
     ];
 
     protected function casts(): array
