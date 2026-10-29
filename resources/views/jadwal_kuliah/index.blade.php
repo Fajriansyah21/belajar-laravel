@@ -37,6 +37,7 @@
                 <th>Ruangan</th>
                 <th>Hari</th>
                 <th>Jam</th>
+                <th>Lampiran</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -50,6 +51,13 @@
                     <td>{{ $jk->ruangan->nama }} ({{ $jk->ruangan->kode_ruangan }})</td>
                     <td>{{ $jk->hari }}</td>
                     <td>{{ substr($jk->jam_mulai, 0, 5) }} - {{ substr($jk->jam_selesai, 0, 5) }}</td>
+                    <td>
+                        @forelse ($jk->lampiran as $lampiran)
+                            <a href="{{ asset('storage/' . $lampiran->path) }}" download>{{ $lampiran->nama_asli }}</a><br>
+                        @empty
+                            <span>-</span>
+                        @endforelse
+                    </td>
 
                     <td>
                         <div class="action-buttons">
@@ -74,7 +82,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="8">Belum ada jadwal kuliah.</td>
+                    <td colspan="9">Belum ada jadwal kuliah.</td>
                 </tr>
             @endforelse
         </tbody>
