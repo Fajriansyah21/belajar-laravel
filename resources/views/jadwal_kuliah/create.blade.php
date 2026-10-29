@@ -22,7 +22,7 @@
         </ul>
     @endif
 
-    <form action="{{ route('jadwal-kuliah.store') }}" method="POST">
+    <form action="{{ route('jadwal-kuliah.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <p>
@@ -93,6 +93,12 @@
         <p>
             <label for="jam_selesai">Jam Selesai</label><br>
             <input type="time" id="jam_selesai" name="jam_selesai" value="{{ old('jam_selesai') }}" required>
+        </p>
+
+        <p>
+            <label for="lampiran">Lampiran (opsional, maksimal 5 file, masing-masing 5 MB)</label><br>
+            <input type="file" id="lampiran" name="lampiran[]" multiple
+                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*">
         </p>
 
         <button type="submit">Simpan</button>
