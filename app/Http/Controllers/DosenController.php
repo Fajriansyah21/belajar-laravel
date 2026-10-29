@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dosen;
+use App\Services\ImageUploadService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -10,6 +11,9 @@ use Illuminate\View\View;
 
 class DosenController extends Controller
 {
+    public function __construct(
+        protected ImageUploadService $imageUpload
+    ) {}
 
     public function index(): View
     {
@@ -19,7 +23,6 @@ class DosenController extends Controller
 
         return view('dosen.index', compact('dosen'));
     }
-
 
     public function create(): View
     {
@@ -39,7 +42,19 @@ class DosenController extends Controller
             'bidang_keahlian' => ['required', 'string', 'max:100'],
             'email' => ['nullable', 'email', 'max:100'],
             'no_telepon' => ['nullable', 'string', 'max:20'],
+            'foto' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+        ], [
+            'foto.image' => 'File foto harus berupa gambar.',
+            'foto.mimes' => 'Foto harus berformat JPG, JPEG, PNG, atau WEBP.',
+            'foto.max' => 'Ukuran foto maksimal 2 MB.',
         ]);
+
+        if ($request->hasFile('foto')) {
+            $validated['foto'] = $this->imageUpload->store(
+                $request->file('foto'),
+                'dosen'
+            );
+        }
 
         Dosen::create($validated);
 
@@ -66,9 +81,29 @@ class DosenController extends Controller
             'bidang_keahlian' => ['required', 'string', 'max:100'],
             'email' => ['nullable', 'email', 'max:100'],
             'no_telepon' => ['nullable', 'string', 'max:20'],
+            'foto' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+        ], [
+            'foto.image' => 'File foto harus berupa gambar.',
+            'foto.mimes' => 'Foto harus berformat JPG, JPEG, PNG, atau WEBP.',
+            'foto.max' => 'Ukuran foto maksimal 2 MB.',
         ]);
 
+        $fotoLama = $dosen->foto;
+
+        if ($request->hasFile('foto')) {
+            $validated['foto'] = $this->imageUpload->store(
+                $request->file('foto'),
+                'dosen'
+            );
+        } else {
+            unset($validated['foto']);
+        }
+
         $dosen->update($validated);
+
+        if ($request->hasFile('foto')) {
+            $this->imageUpload->delete($fotoLama);
+        }
 
         return redirect()
             ->route('dosen.index')
@@ -77,7 +112,9 @@ class DosenController extends Controller
 
     public function destroy(Dosen $dosen): RedirectResponse
     {
+        $foto = $dosen->foto;
         $dosen->delete();
+        $this->imageUpload->delete($foto);
 
         return redirect()
             ->route('dosen.index')
