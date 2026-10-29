@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Dosen extends Model
 {
@@ -17,5 +18,13 @@ class Dosen extends Model
         'bidang_keahlian',
         'email',
         'no_telepon',
+        'foto',
     ];
+
+    public function getFotoUrlAttribute(): ?string
+    {
+        return $this->foto
+            ? Storage::disk('public')->url($this->foto)
+            : null;
+    }
 }
