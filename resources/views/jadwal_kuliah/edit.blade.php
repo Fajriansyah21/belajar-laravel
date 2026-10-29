@@ -22,7 +22,7 @@
         </ul>
     @endif
 
-    <form action="{{ route('jadwal-kuliah.update', $jadwal_kuliah->id) }}" method="POST">
+    <form action="{{ route('jadwal-kuliah.update', $jadwal_kuliah->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -106,6 +106,20 @@
                 value="{{ old('jam_selesai', substr($jadwal_kuliah->jam_selesai, 0, 5)) }}"
                 required
             >
+        </p>
+
+        <p>
+            <strong>Lampiran saat ini</strong><br>
+            @forelse ($jadwal_kuliah->lampiran as $lampiran)
+                <a href="{{ asset('storage/' . $lampiran->path) }}" download>{{ $lampiran->nama_asli }}</a><br>
+            @empty
+                <span>Belum ada lampiran.</span>
+            @endforelse
+        </p>
+        <p>
+            <label for="lampiran">Tambah lampiran (maksimal 5 file, masing-masing 5 MB)</label><br>
+            <input type="file" id="lampiran" name="lampiran[]" multiple
+                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*">
         </p>
 
         <button type="submit">Simpan Perubahan</button>
