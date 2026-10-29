@@ -19,7 +19,15 @@ class Dosen extends Model
         'email',
         'no_telepon',
         'foto',
+        'foto_thumbnail',
     ];
+
+    public function getFotoThumbnailUrlAttribute(): ?string
+    {
+        return $this->foto_thumbnail
+            ? Storage::disk('public')->url($this->foto_thumbnail)
+            : $this->foto_url;
+    }
 
     public function getFotoUrlAttribute(): ?string
     {
